@@ -1,6 +1,6 @@
 # Salvamento de dados do MQ135 no Google Sheets
 
-###### Você pode seguir as instruções desta documentação para armazenar dados do sensor numa planilha do Google Spreadsheets. Este tutorial foi adaptado do guia ![Google-Sheets-Logging] (https://github.com/StorageB/Google-Sheets-Logging) e inclui a biblioteca ![HTTPSRedirect](https://github.com/electronicsguy/HTTPSRedirect), que é uma dependência e deve ser instalada.
+###### Você pode seguir as instruções desta documentação para armazenar dados do sensor numa planilha do Google Spreadsheets. Este tutorial foi adaptado do guia [Google-Sheets-Logging](https://github.com/StorageB/Google-Sheets-Logging) e inclui a biblioteca [HTTPSRedirect](https://github.com/electronicsguy/HTTPSRedirect), que é uma dependência e deve ser instalada.
 
 <br>
 
