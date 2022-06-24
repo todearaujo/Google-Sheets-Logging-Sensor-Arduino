@@ -1,98 +1,124 @@
-# Log data from an ESP8266 to Google Sheets
+# Salvamento de dados do MQ135 no Google Sheets
 
-###### Below are step by step instructions to begin logging data using an ESP8266 module without the need for a third party service. This will publish random number values, so no additional hardware or sensors are required for the script to run. The HTTPSRedirect library is used to publish the data. More information on that library can be found here: https://github.com/electronicsguy/HTTPSRedirect
+###### Você pode seguir as instruções desta documentação para armazenar dados do sensor numa planilha do Google Spreadsheets. Este tutorial foi adaptado do guia ![Google-Sheets-Logging] (https://github.com/StorageB/Google-Sheets-Logging) e inclui a biblioteca ![HTTPSRedirect](https://github.com/electronicsguy/HTTPSRedirect), que é uma dependência e deve ser instalada.
 
 <br>
 
-## Instructions for Google Sheets
+## Parte 1 - Google Sheets
 
-1. Create new Google Sheets document, and give it a name.
+1. Crie uma planilha do Google Sheets, e dê um nome a ela.
 
-2. Type the following text into each of the following cells:
+2. Digite os títulos das colunas na primeira linha da planilha:
 
-   - Cell A1: `Date`
-   - Cell B1: `Time`
-   - Cell C1: `value0`
-   - Cell D1: `value1`
-   - Cell E1: `value2`
+   - Célula A1: `Dia`
+   - Célula B1: `Hora`
+   - Célula C1: `Valor`
+   - Célula D1: `Local`
    <br>
 
-   ![Selection_004](https://user-images.githubusercontent.com/44729718/115277764-46881380-a10a-11eb-9be4-b6fbe7ea7091.png)
+   Exemplo:
+   
+   ![image](https://user-images.githubusercontent.com/3741135/175699252-da06f625-6a72-442a-8af7-e7398dc644e7.png)
 
    
-3. Get the Spreadsheet ID from the URL.
+3. Da URL da planilha, copie o ID.
 
-      For example, if the URL is:
+      ![Selection_006-3](https://user-images.githubusercontent.com/44729718/115287377-d1bad680-a115-11eb-8730-4c6ae00184a7.png)
+
+      Por exemplo, se o endereço no navegador é:
    
          https://docs.google.com/spreadsheets/d/1sqp9hIM5VvDGEf8i9H-W1Z72lm0O5-ZxC16sMMS-cgo/edit#gid=0
 
-      Then the Spreadsheet ID is:
+      Então o ID a copiar é o que está entre `spreadsheets/d/`  e `/edit`:
    
          1sqp9hIM5VvDGEf8i9H-W1Z72lm0O5-ZxC16sMMS-cgo
-      
-      ![Selection_006-3](https://user-images.githubusercontent.com/44729718/115287377-d1bad680-a115-11eb-8730-4c6ae00184a7.png)
 
 
-4. From the Google Sheets menu, go to `Tools > Script Editor`
+4. No menu do Google Sheets, selecione `Extensions > Apps Script`
    
-   *Note:  Make sure you are using the new Apps Script editor (not the legacy version). The editor will default to the new version, but if you're using the legacy version you'll need switch back by clicking the blue "Use new editor" button at the top of the page.*
-
-5. Delete all of the default text in the script editor, and paste the GoogleScripts-example.gs code.
-
-6. Update the Spreadsheet ID (line 12) with the ID obtained in step 3, and click `Save`.
-
-   *Note:  The Spreadsheet ID must be contained in single quotation marks as shown in the example code, and **the script must be saved before continuing** to the next step.*
+   ![sheets-1](https://user-images.githubusercontent.com/3741135/175667583-1ed23a37-a487-49b1-b6f3-cd1eab15d8a4.png)
    
-7. Click the blue `Deploy` button at the top right of the page, and select `New Deployment`. 
+   *Nota: O editor como padrão aparece na versão mais recente. Se por algum motivo aparecer para você a versão antiga (legacy) você deverá trocar para a mais recente clicando no botão "Use new editor" que fica no topo da página.*
+   
+   ![apps-script-1](https://user-images.githubusercontent.com/3741135/175667756-bc2561cb-aa03-4cdf-9da5-492ff35d24be.png)
+
+5. Apague o código padrão que aparece no editor. Abra o arquivo GoogleScripts-example.gs aqui neste repositório, e cole o código inteiro na área de edição.
+
+6. Na linha a seguir, no lugar de XXX, coloque o ID da sua planilha, obtido no passo 3. Clique no botão de salvar.
+
+   
+         var SS = SpreadsheetApp.openById('XXXXX');
+   
+
+   *Nota:  O ID tem que ser colocado com aspas simples, como está no código, e o script **tem que ser salvo** antes de passar para o próximo passo.*
+   
+7. Clique no botão azul `Deploy` no topo direito da página, e selecione `New Deployment`.
+   Na janela que se abre, clique no ícone de engrenagem e escolha 'Web App'
+   
+   ![image](https://user-images.githubusercontent.com/3741135/175689619-eb696aea-13d6-43fc-80a0-ff509d96f97f.png)
+   
+   Em seguida, modifique as seguintes opções:
+
+   - Digite uma descrição
+   - Em `Execute as`, escolha `Me`
+   - Em `Who has access`, escolha `Anyone` *(nota: NÃO selecione `Anyone with a Google Account` - role para encontrar `Anyone`)*
+
+   ![image](https://user-images.githubusercontent.com/3741135/175694332-876a75e5-d1d5-4d9d-9d82-bec6c0d45569.png)
+   
+   Clique em `Deploy`
+   
+8. Clique em `Authorize access` e selecione sua conta do Google.
+
+   ![image](https://user-images.githubusercontent.com/3741135/175695053-2790ce7b-e5c1-49d9-9a10-0707b018a621.png)
+   
+   Aparece uma janela de aviso dizendo "Google hasn't verified this app". Como esse app foi criado por você, não há problema, pois você mesmo é quem terá acesso às planilhas da sua conta. Selecione os pequenos links: `Advanced` > `Go to <nome do projeto> (unsafe)`
+   
+   
+   ![image](https://user-images.githubusercontent.com/3741135/175695518-3e557cdb-1767-4aac-98c0-2125040cc74d.png)
+   
+   Na próxima janela, escolha `Allow`. Uma janela com o `Deployment ID` e o link do Web App aparece. Copie o `Deployment ID`, pois ele será colado no código da placa alguns passos à frente. Clique `Done`.
+   
+
+9. Na barrinha acima do editor de código, clique `Save` e depois `Run`. 
+
+   ![image](https://user-images.githubusercontent.com/3741135/175696480-c4664f57-fa54-40c5-a182-02935f4f896e.png)
+
+   *Nota:  Nada especial acontecerá ao clicar Run, haverá somente uma checagem de código. Mas o passo é necessário.*
  
-   Click the `gear` icon next to Select Type, and select  `Web App` and modify the following:
-
-   - Enter a Description (optional)
-   - Execute as: `Me`
-   - Who has access: `Anyone` *(note: do not select `Anyone with a Google Account` - you must scroll down to the bottom to find `Anyone`)*
    
-   Click `Deploy` 
-   
-8. Click `Authorize access` then select your Google account.
-   
-   On the "Google hasn't verified this app" screen, select `Advanced` > `Go to Untitled project (unsafe)` > `Allow`
+## Parte 2 - Placa NodeMCU / Arduino Editor
 
-   Copy and save the `Deployment ID` for use in the ESP8266 code, and click `Done`.
+1. Aqui neste repositório, abra o arquivo "MQ135-monitor.cpp" e copie o código completo.
 
-9. From the script editor, click `Save` and then `Run`. 
+2. Na interface do editor do Arduino, crie um sketch vazio, apague qualquer código padrão que apareça e cole nele o código retirado do arquivo MQ135-monitor.cpp
 
-   *Note:  Nothing will happen when you click run but you must do that once before continuing.*
- 
+3. Nesse novo sketch onde colou o código, modifique:
 
-
-   
-
-## Instructions for ESP8266
-
-1. In the Arduino IDE, paste the "ESP8266-example.cpp" code into a blank sketch. Overwrite any existing code that was there.
-
-2. Update the following info:
-
-    - Add your Wifi network name
-    - Add your Wifi password
-    - Replace the Google Script Deployment ID with the ID obtained in step 8 above
+    - O nome da sua rede de WiFi, na linha que começa com `const char* ssid;`
+    - A senha da sua rede de Wifi, na linha que começa com `const char* password`
+    - O ID retirado do App Scripts Editor (obtido no passo 1.8 acima)
     
-    *Note:  The Deployment ID must be contained in quotation marks as shown in the example code. The Deployment ID can also be found by clicking `Deploy > Manage Deployments`.*
+    *Note:  Não esqueça de manter as aspas no código. O Deployment ID pode ser recuperado clicando em `Deploy > Manage Deployments`.*
 
-3. Install the HTTPSRedirect library from here:
+3. Antes de testar, vamos instalar a biblioteca HTTPSRedirect, que é necessária. Para instalar, **baixe o arquivo `libraries.zip`**, incluído aqui neste repositório. 
 
-    https://github.com/electronicsguy/HTTPSRedirect
 
-    (click on the green "code" button and "Download ZIP", then unzip the file and move the HTTPSRedirect folder to your library directory)
+5. Se estiver usando o Arduino Web Editor, clique em `Libraries` e clique no botão 'Import', que fica ao lado de 'Library Manager'. Então selecione o arquivo libraries.zip no seu computador e importe.
 
-4. Upload code to your ESP8266 module and watch data get published to your sheet!
+   ![image](https://user-images.githubusercontent.com/3741135/175720696-de218b31-afff-4f33-85ce-9f45d4599c96.png)
+
+   Se estiver usando o programa instalado na sua máquina (Arduino IDE), o caminho é Sketch > Include Library > Add .ZIP library...
+   
+   ![image](https://user-images.githubusercontent.com/3741135/175720650-8ded44a1-bd52-46e6-ae1a-702dad2a54d8.png)
+
+
+6. Caso tenha seguidos os passos até aqui, você deverá poder enviar o código do Arduino Editor para a sua placa NodeMCU. Abra o monitor serial para ver os resultados.
 
      
 
-## Troubleshooting and Additional Notes
+## Nota
 
-1. If you get an "Error compiling for board..." related to the HTTPSRedirect library (and the GScriptID, host, password, and ssid definitions), go the the HTTPSRedirect library folder and delete the "config.cpp" file. Note that the network ID, password, host, and Google Script Deployment ID are defined in the main ESP8266 example code and therefore this file is not required and may cause errors for some compilers. 
-2. When making changes to the Google Scripts code, you will need to click `Save` then `Deploy > New deployment` for any new changes to take effect. You will be given a new Deployment ID that you will have to update in the ESP8266 code each time (each new deployment is given a new Deployment ID).
-3. For applications where data is not sent on a regular interval but rather on an event trigger (such as only sending data when a button is pressed), occasionally the first attempt to send data will fail. Therefore, the code must be modified to send the data again if the first attempt fails. See the example under the "Advanced" folder for additional information.
-4. This tutorial does not work for an ESP32 device.
+1. Ao fazer mudanças no código do Google Scripts code, é preciso clicar em `Save`, depois `Deploy > New deployment`, clicar no ícone de editar e esolher 'New version'. Isso irá gerar um Deployment ID, que você irá colar no código do Arduino Editor.
+
+2. Caso o envio para a placa não funcione de imediato, desconecte, recarregue a página e tente novamente. Às vezes ao enviar o código, acontecem erros de comunicação com a placa.
 
