@@ -1,17 +1,14 @@
-// Example Google Scrips code to upload data to Google Sheets from Arduino/ESP8266
-// Follow setup instructions found here:
-// https://github.com/StorageB/Google-Sheets-Logging
-// reddit: u/StorageB107
-// email: StorageUnitB@gmail.com
+// Exemplo de código do Google Scripts para enviar dados ao Google Sheets a partir do NodeMCU/ESP8266
+// Mais detalhes e guia em português:
+// https://github.com/carolinex/Google-Sheets-Logging-MQ135
+// Inicialmente criado por StorageB (StorageUnitB@gmail.com)
+// Adaptado por Carol X. (carolinex@gmail.com)
 
-
-// Enter Spreadsheet ID here
-var SS = SpreadsheetApp.openById('3213k-okfjdk-gkeJHjd87-vdKei-lKQDIc-a2a_Hjg4');
+// Adicione o ID da sua planilha aqui
+var SS = SpreadsheetApp.openById('1PUruN8YWo-CzBW9lJvt4FRE3-PSvb06xQhwhdAy3jHI');
 var str = "";
 
-
 function doPost(e) {
-
   var parsedData;
   var result = {};
   
@@ -31,12 +28,11 @@ function doPost(e) {
     var sheet = SS.getSheetByName(parsedData.sheet_name); // sheet name to publish data to is specified in Arduino code
     var dataArr = parsedData.values.split(","); // creates an array of the values to publish 
          
-    var date_now = Utilities.formatDate(new Date(), "CST", "yyyy/MM/dd"); // gets the current date
-    var time_now = Utilities.formatDate(new Date(), "CST", "hh:mm:ss a"); // gets the current time
+    var date_now = Utilities.formatDate(new Date(), "America/Sao_Paulo", "dd/MM/yyyy"); // gets the current date
+    var time_now = Utilities.formatDate(new Date(), "America/Sao_Paulo", "hh:mm:ss a"); // gets the current time
     
-    var value0 = dataArr [0]; // value0 from Arduino code
-    var value1 = dataArr [1]; // value1 from Arduino code
-    var value2 = dataArr [2]; // value2 from Arduino code
+    var value = dataArr [0]; // value0 from Arduino code
+    var place = dataArr [1]; // value1 from Arduino code
     
     
     // read and execute command from the "payload_base" string specified in Arduino code
@@ -51,9 +47,8 @@ function doPost(e) {
          
          sheet.getRange('A2').setValue(date_now); // publish current date to cell A2
          sheet.getRange('B2').setValue(time_now); // publish current time to cell B2
-         sheet.getRange('C2').setValue(value0);   // publish value0 from Arduino code to cell C2
-         sheet.getRange('D2').setValue(value1);   // publish value1 from Arduino code to cell D2
-         sheet.getRange('E2').setValue(value2);   // publish value2 from Arduino code to cell E2
+         sheet.getRange('C2').setValue(value);   // publish value0 from Arduino code to cell C2
+         sheet.getRange('D2').setValue(place);   // publish value1 from Arduino code to cell D2
          
          str = "Success"; // string to return back to Arduino serial console
          SpreadsheetApp.flush();
@@ -78,10 +73,8 @@ function doPost(e) {
     }
     
     return ContentService.createTextOutput(str);
-  } // endif (parsedData !== undefined)
-  
-  else {
+    // endif (parsedData !== undefined)
+  }else {
     return ContentService.createTextOutput("Error! Request body empty or in incorrect format.");
   }
 }
-
