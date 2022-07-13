@@ -2,22 +2,21 @@
 
 // Este exemplo foi criado pa partir do exemplo no link a seguir 
 // TUTORIAL AQUI: https://github.com/carolinex/Google-Sheets-Logging-MQ135
-
 #include <Arduino.h> // biblioteca
 #include <ESP8266WiFi.h> // biblioteca
 #include "HTTPSRedirect.h" // biblioteca 
 
 // Substitua esses valores pelo nome e
 // senha da sua rede de WiFi
-const char* ssid     = "NOME-WIFI";
-const char* password = "senha-wifi";
+const char* ssid     = "Baldfi";
+const char* password = "XXXXXXXX";
 
 // Coloque aqui o id do seu Google Apps Script
-const char *GScriptId = "AKfycbyiTn8Rj316NS-j7kmsmdGLO2uL3PSO78IUF2oi2vpYjfkReJVoc6XaMRB1tzJAk4s-";
-String place = "local-2";
+const char *GScriptId = "XXXXXXXXXXX";
+String place = "tode";
 
 // Comando (insert_row ou append_row) e nome da planilha no Google Sheets (padrão é Sheet1):
-String payload_base =  "{\"command\": \"insert_row\", \"sheet_name\": \"Sheet1\", \"values\": ";
+String payload_base =  "{\"command\": \"insert_row\", \"sheet_name\": \"registros\", \"values\": ";
 String payload = "";
 
 // Google Sheets setup (do not edit)
@@ -35,22 +34,37 @@ void setup() {
   Serial.begin(9600);        
   delay(10);
   Serial.println('\n');
+  pinMode(LED_BUILTIN, OUTPUT);
   
   // Conecta ao WiFi
   WiFi.begin(ssid, password);             
   Serial.print("Conectando à rede Wifi ");
   Serial.print(ssid); Serial.println(" ...");
+  digitalWrite(LED_BUILTIN, HIGH);
+  delay(2000);
+  digitalWrite(LED_BUILTIN, LOW);
   
   // continua tentando conectar até conseguir
   while (WiFi.status() != WL_CONNECTED) {
     delay(1000);
     Serial.print(".");
+    digitalWrite(LED_BUILTIN, LOW);   
+    delay(200); 
+    digitalWrite(LED_BUILTIN, HIGH);
+    delay(200);                    
+    digitalWrite(LED_BUILTIN, LOW);   
+    delay(200); 
+    digitalWrite(LED_BUILTIN, HIGH);
+    delay(200);      
+    digitalWrite(LED_BUILTIN, LOW);   
   }
   // Mensagem de sucesso no Serial Monitor
   Serial.println('\n');
   Serial.println("Conexão estabelecida!");  
   Serial.print("IP:\t");
   Serial.println(WiFi.localIP());
+  WiFi.setAutoReconnect(true);
+  WiFi.persistent(true);
 
   // Use HTTPSRedirect class to create a new TLS connection
   client = new HTTPSRedirect(httpsPort);
@@ -68,6 +82,15 @@ void setup() {
     if (retval == 1){
        flag = true;
        Serial.println("NodeMCU conectado ao host");
+        digitalWrite(LED_BUILTIN, LOW);   
+        delay(1000); 
+        digitalWrite(LED_BUILTIN, HIGH);
+        delay(1000);   
+        digitalWrite(LED_BUILTIN, LOW);   
+        delay(1000); 
+        digitalWrite(LED_BUILTIN, HIGH);
+        delay(1000); 
+        digitalWrite(LED_BUILTIN, LOW); 
        break;
     }else{
       Serial.println("Conexão falhou. Tentando novamente...");
@@ -112,15 +135,44 @@ void loop() {
   Serial.println("Publicando dados...");
   Serial.println(payload);
   if(client->POST(url, host, payload)){ 
-    // se quiser, coloque aqui código a executar 
-    // quando a publicação for bem-sucedida
+    digitalWrite(LED_BUILTIN, HIGH);
+    delay(1000);                    
+    digitalWrite(LED_BUILTIN, LOW);   
+    delay(500); 
+    digitalWrite(LED_BUILTIN, HIGH);
+    delay(1000);                    
+    digitalWrite(LED_BUILTIN, LOW);   
+    delay(500);  
+    digitalWrite(LED_BUILTIN, HIGH);
+    delay(1000);                    
+    digitalWrite(LED_BUILTIN, LOW);   
+    delay(500);  
+    digitalWrite(LED_BUILTIN, HIGH);
+    delay(1000);                    
+    digitalWrite(LED_BUILTIN, LOW);   
+    delay(500);  
+    digitalWrite(LED_BUILTIN, HIGH);
+    delay(1000);                    
+    digitalWrite(LED_BUILTIN, LOW);   
+    delay(500);  
+    digitalWrite(LED_BUILTIN, HIGH);
+    delay(5000);                    
+    digitalWrite(LED_BUILTIN, LOW);   
   }
   else{
-    // se quiser, coloque aqui código a executar 
-    // quando a publicação falhar
+    digitalWrite(LED_BUILTIN, HIGH);
+    delay(100); 
+    digitalWrite(LED_BUILTIN, LOW); 
+    delay(100);
+    digitalWrite(LED_BUILTIN, HIGH);
+    delay(100); 
+    digitalWrite(LED_BUILTIN, LOW); 
+    delay(100);
+    digitalWrite(LED_BUILTIN, HIGH);
+    delay(100); 
+    digitalWrite(LED_BUILTIN, LOW); 
     Serial.println("Erro na conexão com o script");
   }
-
-  // espere 2 minutos antes de enviar um novo valor   
-  delay(120000);
+  // espere 10 minuto antes de enviar um novo valor   
+  delay(600000);
 }
