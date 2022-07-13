@@ -126,18 +126,18 @@
 
 NodeMCU conectado com 3 cabos
 
-https://github.com/todearaujo/Google-Sheets-Logging-Sensor-Arduino/blob/master/4.jpg
+![image](https://github.com/todearaujo/Google-Sheets-Logging-Sensor-Arduino/blob/master/4.jpg)
 
 Detalhes de conexão: dois cabos do mesmo lado - A0 (laranja) e GND (preto),
 enquanto, do outro lado, a conexão é no 3V3 (vermelho), extremo oposto A0.
 
-https://github.com/todearaujo/Google-Sheets-Logging-Sensor-Arduino/blob/master/3.jpg
+![image](https://github.com/todearaujo/Google-Sheets-Logging-Sensor-Arduino/blob/master/3.jpg)
 
 Sensor conectado na placa pelos cabos: A0, laranja, que transmite os dados.
 GND, preto, terra. E no VCC, vermelho, para passagem de energia.
 
-https://github.com/todearaujo/Google-Sheets-Logging-Sensor-Arduino/blob/master/2.jpg
+![image](https://github.com/todearaujo/Google-Sheets-Logging-Sensor-Arduino/blob/master/2.jpg)
 
 Conexão Micro-USB <> USB para conectar NodeMCU no computador.
 
-https://github.com/todearaujo/Google-Sheets-Logging-Sensor-Arduino/blob/9a822039aae13b39dab31c5380e89e435353108e/1.jpg
+![image](https://github.com/todearaujo/Google-Sheets-Logging-Sensor-Arduino/blob/9a822039aae13b39dab31c5380e89e435353108e/1.jpg)       
